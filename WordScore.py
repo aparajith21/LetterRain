@@ -30,10 +30,11 @@ letter_score = {'A':1,
 'Y':4,
 'Z':10}
 
-def IsWord(word):
+def WordScore(word):
     score = 0
     if word.lower() in dictionary:
         for i in range(len(word)):
             score += letter_score[word[i].upper()]
     return score
+
 

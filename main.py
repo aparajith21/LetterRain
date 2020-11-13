@@ -1,11 +1,11 @@
 import GenerateLetters
-import IsWord
+import WordScore
 def main():
     n = 5
     for i in range(10):
         letters = GenerateLetters.GenerateLetters(n)
         print(letters)
-    print(IsWord.IsWord("hello"))
+    print(WordScore.WordScore("hello"))
 
 
 
