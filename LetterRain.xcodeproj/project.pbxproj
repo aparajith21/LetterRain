@@ -9,6 +9,7 @@
 /* Begin PBXFileReference section */
 		090A79C9255ED5A10012C120 /* main.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = main.py; sourceTree = "<group>"; };
 		090A79CA255ED6500012C120 /* GenerateLetters.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = GenerateLetters.py; sourceTree = "<group>"; };
+		090A79CB255EE46E0012C120 /* IsWord.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = IsWord.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -17,6 +18,7 @@
 			children = (
 				090A79C9255ED5A10012C120 /* main.py */,
 				090A79CA255ED6500012C120 /* GenerateLetters.py */,
+				090A79CB255EE46E0012C120 /* IsWord.py */,
 			);
 			sourceTree = "<group>";
 		};
