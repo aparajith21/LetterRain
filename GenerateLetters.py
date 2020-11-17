@@ -1,5 +1,5 @@
 from random import choices
-#Letter distribution obtained from http://pi.math.cornell.edu/~mec/2003-2004/cryptography/subs/frequencies.html
+
 population = ['E',
  'T',
  'A',
@@ -422,5 +422,5 @@ weights = [[0.04617207544213557,
 def GenerateLetters(n):
     letters = []
     for i in range(n):
-        letters.append(choices(population, weights[i]))
+        letters.append(choices(population, weights[i])[0])
     return letters

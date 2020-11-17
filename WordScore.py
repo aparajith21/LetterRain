@@ -38,3 +38,4 @@ def WordScore(word):
     return score
 
 
+
