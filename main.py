@@ -17,12 +17,13 @@ def redrawGameWindow(win, x, y, letters, LETTERS):
     for j in range(len(letters)):
         n = len(letters[j])
         level = letters[j]
-
         xlevel = x[j]
         if y[j] < height:
-
             for i in range(n):
-                win.blit(LETTERS[level[i].upper()], (xlevel[i], y[j]))
+                try:
+                    win.blit(LETTERS[level[i].upper()], (xlevel[i], y[j]))
+                except:
+                    err = 1
     pygame.display.update()
 
 def main():
@@ -48,13 +49,33 @@ def main():
     y = []
     levels = 0
     fake_levels = 0
+    words_formed = []
+    word = ""
+    score = 0
 
     while run:
         pygame.time.delay(10)
-
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 run = False
+
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                for i in range(97, 123):
+                    if event.key == i:
+                        for j in range(len(letters)):
+                            if y[j] < HEIGHT:
+                                if chr(i).upper() in letters[j]:
+#                                    letters[j].remove(chr(i).upper())
+                                    letters[j] = list(''.join(letters[j]).replace(chr(i).upper(), ' ', 1))
+                                    word += chr(i).upper()
+                                    break
+                if event.key == pygame.K_RETURN:
+                    words_formed.append(word)
+                    score += WordScore.WordScore(word)
+                    word = ""
+
         win.fill((0, 0, 0))
         fake_levels += 1
 
@@ -63,9 +84,6 @@ def main():
             letter_knt = choices(population = letter_knt_population, weights = letter_knt_weights)[0]
             letters.append(GenerateLetters.GenerateLetters(letter_knt))
             y.append(0)
-
-
-
 
             x_level = []
 
@@ -78,11 +96,16 @@ def main():
         for i in range(levels):
             y[i] += (IMG_HEIGHT + uniform(5, 20))/100
 
+
+
+
         redrawGameWindow(win, x, y, letters, LETTERS)
 
 
 
     pygame.quit()
+    print("Words input: ", words_formed)
+    print("Score: ", score)
 
 
 
