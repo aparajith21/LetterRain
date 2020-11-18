@@ -29,7 +29,11 @@ def redrawGameWindow(win, x, y, letters, LETTERS):
 def main():
 
     pygame.init()
+<<<<<<< HEAD
     win = pygame.display.set_mode((576,1024), flags=0, depth=0, display=0, vsync=0)
+=======
+    win = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+>>>>>>> 5ff380db362b40622674e089ce76ed028cc1183a
     WIDTH, HEIGHT = pygame.display.get_surface().get_size()
     pygame.display.set_caption("LetterRain")
 
