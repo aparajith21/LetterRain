@@ -59,23 +59,26 @@ def checkCollision(character, letters, generated_letters):
 	return -1
 
 def wordFormed(word):
+	"""Display word formed at the top of the window"""
 	X_OFFSET = 100
 	word_length = len(word)
+	# nothing to display
 	if not word_length:
-		return []
+		return None
+	# understand space density for word display
 	letter_space = (WIN_WIDTH - X_OFFSET) // word_length
 	if letter_space > 64:
 		tile_size = 64
 	else:
 		tile_size = letter_space
-	letter_surface = []
+	#display word
 	for indx in range(word_length):
 		x = X_OFFSET + indx * tile_size
 		y = 0
+		# scale word based on tile size
 		img = pygame.transform.scale(LETTERS[word[indx].upper()], (tile_size, tile_size))
 		screen.blit(img, (x, y))
-		letter_surface.append(img.get_rect(topleft = (x,y)))
-		indx += 1
+
 
 
 
