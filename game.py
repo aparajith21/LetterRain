@@ -16,7 +16,7 @@ WIN_HEIGHT = 1024
 WIN_SIZE = (WIN_WIDTH,WIN_HEIGHT)
 
 # Define offset for score display
-OFFSET = 80
+OFFSET = 100
 
 # function create letters on the screen
 def createLetters(letter_knt,generated_letters):
@@ -57,6 +57,27 @@ def checkCollision(character, letters, generated_letters):
 		if((chr(character).upper() == generated_letters[indx]) and catch_box.colliderect(letters[indx])):
 			return indx
 	return -1
+
+def wordFormed(word):
+	X_OFFSET = 100
+	word_length = len(word)
+	if not word_length:
+		return []
+	letter_space = (WIN_WIDTH - X_OFFSET) // word_length
+	if letter_space > 64:
+		tile_size = 64
+	else:
+		tile_size = letter_space
+	letter_surface = []
+	for indx in range(word_length):
+		x = X_OFFSET + indx * tile_size
+		y = 0
+		img = pygame.transform.scale(LETTERS[word[indx].upper()], (tile_size, tile_size))
+		screen.blit(img, (x, y))
+		letter_surface.append(img.get_rect(topleft = (x,y)))
+		indx += 1
+
+
 
 # Initiate the game
 pygame.init()
@@ -158,6 +179,8 @@ while True:
 		letters = moveLetters(letters)
 		drawLetters(letters,generated_letters)
 
+		# Display word formed so far
+		wordFormed(curr_word)
 		# Update display
 		pygame.display.update()
 		clock.tick(FPS)
