@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		090A79C9255ED5A10012C120 /* main.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = main.py; sourceTree = "<group>"; };
 		090A79CA255ED6500012C120 /* GenerateLetters.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = GenerateLetters.py; sourceTree = "<group>"; };
 		090A79CC255F03CF0012C120 /* WordScore.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = WordScore.py; sourceTree = "<group>"; };
+		09B3C6D9256671FC0047BFF0 /* game.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = game.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		090A79BE255ED3A40012C120 = {
 			isa = PBXGroup;
 			children = (
-				090A79C9255ED5A10012C120 /* main.py */,
 				090A79CC255F03CF0012C120 /* WordScore.py */,
+				09B3C6D9256671FC0047BFF0 /* game.py */,
 				090A79CA255ED6500012C120 /* GenerateLetters.py */,
 			);
 			sourceTree = "<group>";

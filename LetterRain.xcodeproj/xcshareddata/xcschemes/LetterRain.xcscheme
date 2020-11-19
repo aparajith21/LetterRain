@@ -47,7 +47,7 @@
       </PathRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "main.py"
+            argument = "game.py"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
