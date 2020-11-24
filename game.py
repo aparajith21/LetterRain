@@ -70,8 +70,8 @@ def wordFormed(word):
 		return None
 	# understand space density for word display
 	letter_space = (WIN_WIDTH - X_OFFSET) // word_length
-	if letter_space > 64:
-		tile_size = 64
+	if letter_space > 48:
+		tile_size = 48
 	else:
 		tile_size = letter_space
 	#display word
@@ -104,6 +104,14 @@ pygame.init()
 
 # initialise font
 pygame.font.init()
+
+# initialise music mixer
+pygame.mixer.init()
+pygame.mixer.music.load('assets/bgm.mp3')
+# set volume and play clair de lune infinitely
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play(-1)
+
 # Get font
 font = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 18)
 
