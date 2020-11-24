@@ -84,7 +84,7 @@ def wordFormed(word):
 
 # Initiate the game
 pygame.init()
-# initialise fonts
+# initialise font
 pygame.font.init()
 
 #get font
