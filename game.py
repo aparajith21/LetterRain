@@ -21,8 +21,8 @@ OFFSET = 100
 
 def createLetters(letter_knt,generated_letters):
 	"""Create letters to be displayed on screen.
-		It inputs the number of new letters to be generated, calls the GenerateLetters
-		function and then returns a letter surface for display"""
+	It inputs the number of new letters to be generated, calls the GenerateLetters
+	function and then returns a letter surface for display"""
 	new_generated_letters = GenerateLetters.GenerateLetters(letter_knt)
 	generated_letters.extend(new_generated_letters)
 
@@ -63,7 +63,7 @@ def checkCollision(character, letters, generated_letters):
 
 def wordFormed(word):
 	"""Display word formed at the top of the window"""
-	X_OFFSET = 100
+	X_OFFSET = 180
 	word_length = len(word)
 	# nothing to display
 	if not word_length:
@@ -219,7 +219,7 @@ while True:
 
 		# Display timer
 		timer_txt = font.render(f'Time Remaining: {counter}',True,(0,0,0))
-		screen.blit(timer_txt,(WIN_WIDTH-timer_txt.get_width() - 30,0))
+		screen.blit(timer_txt,(0, 20))
 
 		# Display the catching region
 		screen.blit(catch_surface, catch_box)
