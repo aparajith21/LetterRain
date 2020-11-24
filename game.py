@@ -97,7 +97,7 @@ def exitGame():
 # Initiate the game
 pygame.init()
 
-# initialise fonts
+# initialise font
 pygame.font.init()
 # Get font
 font = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 18)
