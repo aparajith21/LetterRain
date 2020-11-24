@@ -91,7 +91,10 @@ class SplashScreen(QMainWindow):
         counter += 1
 
 def b():
-	exec(open('game.py').read())
+	#exec(open('game.py').read())---needs to be changed
+	os.system('python3 game.py')
+
+	
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
