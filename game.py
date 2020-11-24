@@ -79,26 +79,41 @@ def wordFormed(word):
 		img = pygame.transform.scale(LETTERS[word[indx].upper()], (tile_size, tile_size))
 		screen.blit(img, (x, y))
 
+# Function to evaluate the current word
+def evaluateWord():
+	global score, curr_word
+	print(curr_word)
+	words_formed.append(curr_word)
+	score += WordScore.WordScore(curr_word)
+	curr_word = ""
 
-
+# Close function
+def exitGame():
+	global score
+	pygame.quit()
+	print("Score: ", score)
+	sys.exit()
 
 # Initiate the game
 pygame.init()
+
 # initialise fonts
 pygame.font.init()
-
-#get font
+# Get font
 font = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 18)
-
 
 # game variables
 gravity = 2
 game_active = False
-levels = 0
 words_formed = []
 curr_word = ""
 score = 0
 
+# Level Information
+level = 0
+TARGET_SCORE = [10,20,30,40,50]
+LVL_TIMEOUT = 120
+counter = 0
 
 # Define FPS & SPAWN_TIME
 FPS = 60
@@ -134,20 +149,27 @@ ascii_letters = [i for i in range(97,123)]
 SPAWNLETTER = pygame.USEREVENT
 pygame.time.set_timer(SPAWNLETTER, SPWN_TIME)
 
+#Create a timer event that runs for every second
+TIMER = pygame.USEREVENT + 1
+pygame.time.set_timer(TIMER, 1000)
+
 # Game Loop
 while True:
 
 	# Event Loop
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			pygame.quit()
-			print("Score: ", score)
-			sys.exit()
+			exitGame()
+
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_SPACE and game_active == False:
+				# Start the game - init all game variables
 				game_active = True
 				letters = []
 				generated_letters = []
+				level = 0
+				counter = LVL_TIMEOUT
+
 			if event.key in ascii_letters:
 				indx = checkCollision(event.key, letters, generated_letters)
 				if indx >= 0:
@@ -155,28 +177,47 @@ while True:
 					curr_word = curr_word + generated_letters[indx]
 					generated_letters.pop(indx)
 					letters.pop(indx)
+
 			if event.key == pygame.K_RETURN:
-				print(curr_word)
-				words_formed.append(curr_word)
-				score += WordScore.WordScore(curr_word)
-				curr_word = ""
-
-
+				evaluateWord()
+				
 		if event.type == SPAWNLETTER and game_active == True:
 			letter_knt = choices(population = letter_knt_population, weights = letter_knt_weights)[0]
 			letters.extend(createLetters(letter_knt,generated_letters))
 
+		# For every second update counter
+		if event.type == TIMER and game_active == True:
+			counter -= 1
 
-	# Display bg surface
-	screen.blit(bg_surface,(0, 0))
-	# Display score
-	text = font.render(f'Score: {score}', True, (0, 0, 0))
-	screen.blit(text, (0, 0))
-	# Display the catching region
-	screen.blit(catch_surface, catch_box)
 
 	# When game is active
 	if game_active:
+
+		# Check for TIMEOUT
+		if counter == 0:
+			if score >= TARGET_SCORE[level]:
+				print("Congrats. Passed to next level")
+				level += 1
+				counter = LVL_TIMEOUT
+			else:
+				print("Game Over")
+				evaluateWord()
+				exitGame()
+
+		# Display bg surface
+		screen.blit(bg_surface,(0, 0))
+		
+		# Display score
+		# displayLevelInfo(score)
+		text = font.render(f'Score: {score}', True, (0, 0, 0))
+		screen.blit(text, (0, 0))
+
+		# Display timer
+		timer_txt = font.render(f'Time Remaining: {counter}',True,(0,0,0))
+		screen.blit(timer_txt,(WIN_WIDTH-timer_txt.get_width() - 30,0))
+
+		# Display the catching region
+		screen.blit(catch_surface, catch_box)
 
 		# Move the letters
 		letters = moveLetters(letters)
@@ -187,5 +228,3 @@ while True:
 		# Update display
 		pygame.display.update()
 		clock.tick(FPS)
-
-
