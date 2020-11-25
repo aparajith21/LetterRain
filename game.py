@@ -69,6 +69,7 @@ def checkCollision(character, letters, generated_letters):
     return -1
 
 def wordFormed(word):
+<<<<<<< HEAD
     """
     Display word formed at the top of the window
     """
@@ -90,6 +91,28 @@ def wordFormed(word):
         # scale word based on tile size
         img = pygame.transform.scale(LETTERS[word[indx].upper()], (tile_size, tile_size))
         screen.blit(img, (x, y))
+=======
+	"""Display word formed at the top of the window"""
+	X_OFFSET = 180
+	word_length = len(word)
+	# nothing to display
+	if not word_length:
+		return None
+	# understand space density for word display
+	letter_space = (WIN_WIDTH - X_OFFSET) // word_length
+	if letter_space > 48:
+		tile_size = 48
+	else:
+		tile_size = letter_space
+	#display word
+	for indx in range(word_length):
+		x = X_OFFSET + indx * tile_size
+		y = 0
+		# scale word based on tile size
+		img = pygame.transform.scale(LETTERS[word[indx].upper()], (tile_size, tile_size))
+		screen.blit(img, (x, y))
+
+>>>>>>> 989e7d17866d449ac48779b05c6ef1bfc166d505
 
 def evaluateWord():
     """
@@ -115,6 +138,14 @@ pygame.init()
 
 # initialise font
 pygame.font.init()
+
+# initialise music mixer
+pygame.mixer.init()
+pygame.mixer.music.load('assets/bgm.mp3')
+# set volume and play clair de lune infinitely
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play(-1)
+
 # Get font
 font = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 18)
 
