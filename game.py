@@ -18,8 +18,12 @@ WIN_SIZE = (WIN_WIDTH,WIN_HEIGHT)
 # Define offset for score display
 OFFSET = 100
 
-# function create letters on the screen
 def createLetters(letter_knt,generated_letters):
+    """
+    Create letters to be displayed on screen.
+    It inputs the number of new letters to be generated, calls the GenerateLetters
+    function and then returns a letter surface for display
+    """
     new_generated_letters = GenerateLetters.GenerateLetters(letter_knt)
     generated_letters.extend(new_generated_letters)
 
@@ -32,14 +36,18 @@ def createLetters(letter_knt,generated_letters):
         indx += 1
     return letter_surface
 
-# define function to move the letters downward
 def moveLetters(letters):
+    """
+    Move the letters on screen downwards using gravity
+    """
     for letter in letters:
         letter.centery += gravity
     return letters
 
-# Utility function to draw the letter on the screen
 def drawLetters(letters,generated_letters):
+    """
+    Utility function to draw the letter on the screen
+    """
     indx = 0
     while(indx < len(letters)):
         # Check for out of window letters
@@ -51,16 +59,20 @@ def drawLetters(letters,generated_letters):
             letters.pop(indx)
             generated_letters.pop(indx)
 
-# Utility function to check collision with catch_box
 def checkCollision(character, letters, generated_letters):
+    """
+    Utility function to check collision with catch_box
+    """
     for indx in range(0,len(letters)):
         if((chr(character).upper() == generated_letters[indx]) and catch_box.colliderect(letters[indx])):
             return indx
     return -1
 
 def wordFormed(word):
-    """Display word formed at the top of the window"""
-    X_OFFSET = 100
+    """
+    Display word formed at the top of the window
+    """
+    X_OFFSET = 180
     word_length = len(word)
     # nothing to display
     if not word_length:
@@ -79,16 +91,20 @@ def wordFormed(word):
         img = pygame.transform.scale(LETTERS[word[indx].upper()], (tile_size, tile_size))
         screen.blit(img, (x, y))
 
-# Function to evaluate the current word
 def evaluateWord():
+    """
+    Function to evaluate the current word
+    """
     global score, curr_word
     print(curr_word)
     words_formed.append(curr_word)
     score += WordScore.WordScore(curr_word)
     curr_word = ""
 
-# Close function
 def exitGame():
+    """
+    Close the game
+    """
     global score
     pygame.quit()
     print("Score: ", score)
@@ -189,7 +205,6 @@ while True:
         if event.type == TIMER and game_active == True:
             counter -= 1
 
-
     # When game is active
     if game_active:
 
@@ -214,7 +229,7 @@ while True:
 
         # Display timer
         timer_txt = font.render(f'Time Remaining: {counter}',True,(0,0,0))
-        screen.blit(timer_txt,(WIN_WIDTH-timer_txt.get_width() - 30,0))
+        screen.blit(timer_txt,(0, 20))
 
         # Display the catching region
         screen.blit(catch_surface, catch_box)
