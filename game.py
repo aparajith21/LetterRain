@@ -4,6 +4,7 @@ import pygame
 from random import choices
 from random import uniform
 from math import exp
+from math import ceil
 import sys
 
 # Define width and height of img
@@ -12,11 +13,11 @@ IMG_HEIGHT = 48
 
 # Define window size
 WIN_WIDTH = 780
-WIN_HEIGHT = 1024
-WIN_SIZE = (WIN_WIDTH,WIN_HEIGHT)
+#WIN_HEIGHT = 1024
+#WIN_SIZE = (WIN_WIDTH,WIN_HEIGHT)
 
-# Define y offset for letters falling
-OFFSET = 130
+# Define offset for score display
+OFFSET = 80
 
 def createLetters(letter_knt,generated_letters):
     """
@@ -51,7 +52,7 @@ def drawLetters(letters,generated_letters):
     indx = 0
     while(indx < len(letters)):
         # Check for out of window letters
-        if letters[indx].centery < WIN_HEIGHT - 200:
+        if letters[indx].centery < WIN_HEIGHT:
             screen.blit(LETTERS[generated_letters[indx].upper()],letters[indx])
             indx += 1
         else:
@@ -73,20 +74,21 @@ def wordFormed(word):
     Display word formed at the top of the window
     """
     X_OFFSET = 180
+    Y_OFFSET = 10
     word_length = len(word)
     # nothing to display
     if not word_length:
         return None
     # understand space density for word display
-    letter_space = (WIN_WIDTH - X_OFFSET) // word_length
+    letter_space = ceil((WIN_WIDTH - 2 * X_OFFSET) / word_length)
     if letter_space > IMG_WIDTH:
         tile_size = IMG_WIDTH
     else:
-        tile_size = letter_space - 5
+        tile_size = letter_space
     #display word
     for indx in range(word_length):
-        x = X_OFFSET + indx * tile_size
-        y = 65
+        x = (WIN_WIDTH - letter_space * word_length) // 2 + indx * tile_size
+        y = Y_OFFSET + (IMG_WIDTH - tile_size) // 2
         # scale word based on tile size
         img = pygame.transform.scale(LETTERS[word[indx].upper()], (tile_size, tile_size))
         screen.blit(img, (x, y))
@@ -127,6 +129,9 @@ def exitGame():
 
 # Initiate the game
 pygame.init()
+WIN_HEIGHT = (pygame.display.Info().current_h * 9) // 10
+WIN_SIZE = (WIN_WIDTH,WIN_HEIGHT)
+
 # game window caption
 pygame.display.set_caption("LetterRain")
 
@@ -163,6 +168,7 @@ SPWN_TIME = 800
 
 # Draw display surface
 screen = pygame.display.set_mode(WIN_SIZE)
+#screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 
 # Import bg surface
