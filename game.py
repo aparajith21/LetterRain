@@ -127,6 +127,8 @@ def exitGame():
 
 # Initiate the game
 pygame.init()
+# game window caption
+pygame.display.set_caption("LetterRain")
 
 # initialise font
 pygame.font.init()
