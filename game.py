@@ -132,11 +132,11 @@ pygame.init()
 pygame.font.init()
 
 # initialise music mixer
-# pygame.mixer.init()
-# pygame.mixer.music.load('assets/bgm.mp3')
-# # set volume and play clair de lune infinitely
-# pygame.mixer.music.set_volume(0.5)
-# pygame.mixer.music.play(-1)
+pygame.mixer.init()
+pygame.mixer.music.load('assets/bgm.ogg')
+ # set volume and play clair de lune infinitely
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play(-1)
 
 # Get font
 font = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 18)
