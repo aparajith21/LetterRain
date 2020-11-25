@@ -127,6 +127,43 @@ def exitGame():
     print("Score: ", score)
     sys.exit()
 
+def displayPauseScreen():
+    """
+    Display function for the pause screen
+    """
+    screen.blit(bg_surface,(0, 0))
+    screen.blit(paused_mask, paused_mask_box)
+    screen.blit(paused_txt_surface,paused_txt_box)
+    screen.blit(play_btn_surface, play_btn_box)
+    screen.blit(restart_btn_surface, restart_btn_box)
+    screen.blit(close_btn_surface, close_btn_box)
+
+def startGame():
+    """
+    function to init parameters to start the game
+    """
+    global game_active, paused, letters, generated_letters, level, score, counter
+    game_active = True
+    paused = False
+    letters = []
+    generated_letters = []
+    level = 0
+    score = 0
+    counter = LVL_TIMEOUT
+
+def startLevel(level):
+
+    levelAnimation = True
+    while True:
+        continue
+
+
+def nextLevel(level):
+
+    level += 1
+
+
+
 # Initiate the game
 pygame.init()
 WIN_HEIGHT = (pygame.display.Info().current_h * 9) // 10
@@ -161,6 +198,7 @@ TARGET_SCORE = [10,20,30,40,50]
 LVL_TIMEOUT = 120
 counter = 0
 paused = False
+sound = True
 
 # Define FPS & SPAWN_TIME
 FPS = 60
@@ -170,6 +208,16 @@ SPWN_TIME = 800
 screen = pygame.display.set_mode(WIN_SIZE)
 #screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
+
+# Import level surface
+level_surface = pygame.image.load('assets/level.png').convert_alpha()
+level_surface = pygame.transform.scale(level_surface, (100,100))
+
+# Import level number surfaces
+NUMBERS = list(map(str,[i for i in range(0,10)]))
+NUMBERS = {char : pygame.image.load('assets/'+char+'.png').convert_alpha() for char in NUMBERS}
+for number in NUMBERS.keys():
+    NUMBERS[number] = pygame.transform.scale(NUMBERS[number], (100,100))
 
 # Import bg surface
 bg_surface = pygame.image.load('assets/bg.png').convert()
@@ -196,12 +244,31 @@ paused_txt_box = paused_txt_surface.get_rect(center = ((WIN_WIDTH/2,WIN_HEIGHT/2
 # Import pause button
 pause_btn_surface = pygame.image.load('assets/pause.png').convert_alpha()
 pause_btn_surface = pygame.transform.scale(pause_btn_surface,(50,50))
-pause_btn_box = pause_btn_surface.get_rect(center = ((WIN_WIDTH - 30,WIN_HEIGHT - 30)))
+pause_btn_box = pause_btn_surface.get_rect(center = ((WIN_WIDTH - 90,WIN_HEIGHT - 30)))
 
 # Import play button
 play_btn_surface = pygame.image.load('assets/play.png').convert_alpha()
-play_btn_surface = pygame.transform.scale(play_btn_surface,(50,50))
-play_btn_box = play_btn_surface.get_rect(center = ((WIN_WIDTH - 30,WIN_HEIGHT - 30)))
+play_btn_surface = pygame.transform.scale(play_btn_surface,(100,100))
+play_btn_box = play_btn_surface.get_rect(center = ((WIN_WIDTH/2 - 120,WIN_HEIGHT/2 + 120)))
+
+# Import close button
+close_btn_surface = pygame.image.load('assets/close.png').convert_alpha()
+close_btn_surface = pygame.transform.scale(close_btn_surface, (100,100))
+close_btn_box = close_btn_surface.get_rect(center = ((WIN_WIDTH/2 + 120,WIN_HEIGHT/2 + 120)))
+
+# Import restart button
+restart_btn_surface = pygame.image.load('assets/restart.png').convert_alpha()
+restart_btn_surface = pygame.transform.scale(restart_btn_surface, (100,100))
+restart_btn_box = restart_btn_surface.get_rect(center = ((WIN_WIDTH/2,WIN_HEIGHT/2 + 120)))
+
+# Import sound on and off button
+sound_on_surface = pygame.image.load('assets/sound.png').convert_alpha()
+sound_on_surface = pygame.transform.scale(sound_on_surface, (50,50))
+sound_on_box = sound_on_surface.get_rect(center = ((WIN_WIDTH - 30,WIN_HEIGHT - 30)))
+
+sound_off_surface = pygame.image.load('assets/sound_off.png').convert_alpha()
+sound_off_surface = pygame.transform.scale(sound_off_surface, (50,50))
+sound_off_box = sound_off_surface.get_rect(center = ((WIN_WIDTH - 30,WIN_HEIGHT - 30)))
 
 # Import time headline
 time_display_surface = pygame.image.load('assets/time.png').convert_alpha()
@@ -243,11 +310,8 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and game_active == False:
                 # Start the game - init all game variables
-                game_active = True
-                letters = []
-                generated_letters = []
-                level = 0
-                counter = LVL_TIMEOUT
+                startGame()
+                
 
             if event.key in ascii_letters and game_active == True:
                 indx = checkCollision(event.key, letters, generated_letters)
@@ -282,6 +346,22 @@ while True:
                     paused = False
                     game_active = True
 
+            if(close_btn_box.collidepoint(pygame.mouse.get_pos())):
+                evaluateWord()
+                exitGame()
+
+            if(restart_btn_box.collidepoint(pygame.mouse.get_pos())):
+                startGame()
+
+            if sound == True:
+                if(sound_on_box.collidepoint(pygame.mouse.get_pos())):
+                    sound = False
+                    pygame.mixer.music.pause()
+            else:
+                if(sound_off_box.collidepoint(pygame.mouse.get_pos())):
+                    sound = True
+                    pygame.mixer.music.unpause()
+
         # For every second update counter
         if event.type == TIMER and game_active == True:
             counter -= 1
@@ -293,7 +373,7 @@ while True:
         if counter == 0:
             if score >= TARGET_SCORE[level]:
                 print("Congrats. Passed to next level")
-                level += 1
+                nextLevel(level)
                 counter = LVL_TIMEOUT
             else:
                 print("Game Over")
@@ -319,11 +399,14 @@ while True:
         # Display pasue button
         screen.blit(pause_btn_surface, pause_btn_box)
 
+        # Display sound button
+        if sound == True:
+            screen.blit(sound_on_surface,sound_on_box)
+        else:
+            screen.blit(sound_off_surface,sound_off_box)
+
     if paused == True:
-        screen.blit(bg_surface,(0, 0))
-        screen.blit(paused_mask, paused_mask_box)
-        screen.blit(paused_txt_surface,paused_txt_box)
-        screen.blit(play_btn_surface, play_btn_box)
+        displayPauseScreen()
 
     # Update display
     pygame.display.update()
