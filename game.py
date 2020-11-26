@@ -134,6 +134,7 @@ def exitGame():
     Close the game
     """
     global score
+    f.close()
     pygame.quit()
     print("Score: ", score)
     sys.exit()
@@ -223,7 +224,6 @@ def exitGameMenu():
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-				f.close()
 				exitGame()
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if input_box.collidepoint(event.pos):
