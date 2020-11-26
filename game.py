@@ -250,7 +250,7 @@ def exitGameMenu():
 			if event.type == pygame.KEYDOWN:
 				# input the name
 				if active and not accepted:
-					if event.key == pygame.K_RETURN:
+					if event.key == pygame.K_RETURN and len(text) > 0:
 						# update leaderboard
 						updateLeaderboard(text)
 						text = ''
@@ -268,10 +268,11 @@ def exitGameMenu():
 		displayLeaderboard()
 
 		# draw name input box
-		pygame.draw.rect(screen, color, input_box, 0)
-		screen.blit(nameEntry, nameEntryRect)
-		txt_surface = font.render(text, True, BLACK)
-		screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+		if not accepted:
+			pygame.draw.rect(screen, color, input_box, 0)
+			screen.blit(nameEntry, nameEntryRect)
+			txt_surface = font.render(text, True, BLACK)
+			screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
 
 
 
