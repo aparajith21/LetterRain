@@ -280,10 +280,10 @@ def updateLeaderboard(text):
     """
     Updates the leaderboard if person is a leader
     """
-    global score, leaderboard
+    global total_score, leaderboard
     flag = 0
     for idx, person in enumerate(leaderboard):
-        if int(person[2]) < score:
+        if int(person[2]) < total_score:
             flag = idx + 1
             break
     boardSize = len(leaderboard)
@@ -293,7 +293,7 @@ def updateLeaderboard(text):
 
     if flag:
         f.seek(0)
-        new_leader = [str(flag), text, str(score)]
+        new_leader = [str(flag), text, str(total_score)]
 
         leaderboard.insert(flag - 1, new_leader)
         leaderboard[flag: ] = [[str(int(person[0]) + 1), person[1], person[2]] for person in leaderboard[flag: ] ]
