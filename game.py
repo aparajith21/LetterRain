@@ -197,8 +197,6 @@ def nextLevel():
 
     global nxt_lvl_animate, lvl_animate, level, score, total_score, TARGET_SCORE
 
-    total_score += score
-
     screen.blit(bg_surface,(0, 0))
 
     if nxt_lvl_animate <= 2:
@@ -703,10 +701,12 @@ while True:
             if score >= TARGET_SCORE[level]:
                 print("Congrats. Passed to next level")
                 game_active = False
+                total_score += score
                 nxt_lvl_animate += 1
                 counter = LVL_TIMEOUT
             else:
                 print("Game Over")
+                print(total_score)
                 evaluateWord()
                 game_active = False
                 game_over_animate += 1
