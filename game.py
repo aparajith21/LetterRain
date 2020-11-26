@@ -210,7 +210,7 @@ def exitGameMenu():
 	name_entry_txt = "Enter your nickname"
 	nameEntry = mediumFont.render(name_entry_txt, True, BLACK)
 	nameEntryRect = nameEntry.get_rect()
-	nameEntryRect.center = ((WIN_WIDTH / 2), 400)
+	nameEntryRect.center = ((WIN_WIDTH / 2),  WIN_HEIGHT // 2 )
 
 
 	color_inactive = pygame.Color(GRAY)
