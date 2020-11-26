@@ -6,6 +6,7 @@ from random import uniform
 from math import exp
 from math import ceil
 import sys
+import csv
 
 # Define width and height of img
 IMG_WIDTH = 48
@@ -18,6 +19,16 @@ WIN_WIDTH = 780
 
 # Define offset for score display
 OFFSET = 80
+
+# define some colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GRAY = (200, 200, 255)
+
+# read leaderboard
+f = open('leaderboard.csv', 'r+')
+leaderboard = [person for person in csv.reader(f)]
+
 
 def createLetters(letter_knt,generated_letters):
     """
@@ -127,6 +138,176 @@ def exitGame():
     print("Score: ", score)
     sys.exit()
 
+def displayLeaderboard():
+	"""
+	Prints leaderboard on the game window
+	"""
+
+	global leaderboard
+
+	Y_OFFSET = 50
+	TOP_OFFSET = 150
+
+	leaderboard_title = largeFont.render("Leader Board", True, BLACK)
+	leaderboard_titleRect = leaderboard_title.get_rect()
+	leaderboard_titleRect.center = ((WIN_WIDTH / 2), 50)
+	screen.blit(leaderboard_title, leaderboard_titleRect)
+
+
+
+	for idx, person in enumerate(leaderboard):
+		person_entry_txt = person[0] + '.'
+		person_entry_txt += ('    ') + person[1]
+
+
+		leaderboard_entry = mediumFont.render(person_entry_txt, True, BLACK)
+		leaderboard_entryRect = leaderboard_entry.get_rect()
+		leaderboard_entryRect.bottomleft = ((WIN_WIDTH / 4), TOP_OFFSET + Y_OFFSET * idx)
+		screen.blit(leaderboard_entry, leaderboard_entryRect)
+
+		score_entry_txt = person[2]
+		rightAlign = mediumFont.size(person[2])[0]
+
+		leaderboard_entryScore = mediumFont.render(score_entry_txt, True, BLACK)
+		leaderboard_entryScoreRect = leaderboard_entryScore.get_rect()
+		leaderboard_entryScoreRect.bottomleft = ((3 * WIN_WIDTH / 4) - rightAlign, TOP_OFFSET + Y_OFFSET * idx)
+		screen.blit(leaderboard_entryScore, leaderboard_entryScoreRect)
+
+def updateLeaderboard(text):
+	"""
+	Updates the leaderboard if person is a leader
+	"""
+	global score, leaderboard
+	flag = 0
+	for idx, person in enumerate(leaderboard):
+		if int(person[2]) < score:
+			flag = idx + 1
+			break
+	boardSize = len(leaderboard)
+	if not flag and boardSize < 5:
+		flag = boardSize + 1
+
+
+	if flag:
+		f.seek(0)
+		new_leader = [str(flag), text, str(score)]
+
+		leaderboard.insert(flag - 1, new_leader)
+		leaderboard[flag: ] = [[str(int(person[0]) + 1), person[1], person[2]] for person in leaderboard[flag: ] ]
+		leaderboard = leaderboard[:-1] if len(leaderboard) == 6 else leaderboard
+
+		writer = csv.writer(f)
+		writer.writerows(leaderboard)
+
+def exitGameMenu():
+	"""
+	Displays the exit view
+	"""
+	global sound, leaderboard, score, close_btn_surface, play_btn_surface, restart_btn_surface
+	input_box =	pygame.Rect((WIN_WIDTH - 140)// 2, 5 * WIN_HEIGHT // 9, 140, 32)
+
+	name_entry_txt = "Enter your nickname"
+	nameEntry = mediumFont.render(name_entry_txt, True, BLACK)
+	nameEntryRect = nameEntry.get_rect()
+	nameEntryRect.center = ((WIN_WIDTH / 2), 400)
+
+
+	color_inactive = pygame.Color(GRAY)
+	color_active = pygame.Color(WHITE)
+	color = color_inactive
+	active = False
+	text = ''
+	accepted = False
+
+
+	while True:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				f.close()
+				exitGame()
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if input_box.collidepoint(event.pos):
+					active = not active
+				else:
+					active = False
+				if(close_btn_box_exit.collidepoint(pygame.mouse.get_pos())):
+					evaluateWord()
+					exitGame()
+
+				if(restart_btn_box_exit.collidepoint(pygame.mouse.get_pos())):
+					startGame()
+					return True
+
+				color = color_active if active else color_inactive
+				if sound == True:
+					if(sound_on_box.collidepoint(pygame.mouse.get_pos())):
+						sound = False
+						pygame.mixer.music.pause()
+				elif not sound:
+					if(sound_off_box.collidepoint(pygame.mouse.get_pos())):
+						sound = True
+						pygame.mixer.music.unpause()
+			if event.type == pygame.KEYDOWN:
+				# input the name
+				if active and not accepted:
+					if event.key == pygame.K_RETURN:
+						# update leaderboard
+						updateLeaderboard(text)
+						text = ''
+						accepted = True
+					# backspace
+					elif event.key == pygame.K_BACKSPACE:
+						text = text[:-1]
+						# max name length = 12
+					elif len(text) < 12:
+						text += event.unicode
+		 # Display bg surface
+		screen.blit(bg_surface,(0, 0))
+
+		# display leaderboard
+		displayLeaderboard()
+
+		# draw name input box
+		pygame.draw.rect(screen, color, input_box, 0)
+		screen.blit(nameEntry, nameEntryRect)
+		txt_surface = font.render(text, True, BLACK)
+		screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+
+
+
+        # Display sound button
+		if sound == True:
+			screen.blit(sound_on_surface,sound_on_box)
+		else:
+			screen.blit(sound_off_surface,sound_off_box)
+
+
+
+		# close button
+
+		close_btn_surface_exit = pygame.transform.scale(close_btn_surface, (100,100))
+		close_btn_box_exit = close_btn_surface_exit.get_rect(center = ((WIN_WIDTH/2 + 120,3 * WIN_HEIGHT // 4)))
+
+		# restart button
+
+		restart_btn_surface_exit = pygame.transform.scale(restart_btn_surface, (100,100))
+		restart_btn_box_exit = restart_btn_surface_exit.get_rect(center = ((WIN_WIDTH/2 - 120, 3 * WIN_HEIGHT // 4)))
+
+
+		screen.blit(restart_btn_surface_exit, restart_btn_box_exit)
+		screen.blit(close_btn_surface_exit, close_btn_box_exit)
+
+		# Update display
+		pygame.display.update()
+		clock.tick(FPS)
+
+
+
+
+
+
+
+
 def displayPauseScreen():
     """
     Display function for the pause screen
@@ -184,6 +365,8 @@ pygame.mixer.music.play(-1)
 
 # Get font
 font = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 18)
+largeFont = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 40)
+mediumFont = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 28)
 
 # game variables
 gravity = 2
@@ -303,111 +486,113 @@ pygame.time.set_timer(TIMER, 1000)
 while True:
 
     # Event Loop
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            exitGame()
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			if exitGameMenu():
+				continue
+			sys.exit()
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and game_active == False:
+		if event.type == pygame.KEYDOWN:
+			if event.key == pygame.K_SPACE and game_active == False:
                 # Start the game - init all game variables
-                startGame()
+				startGame()
                 
 
-            if event.key in ascii_letters and game_active == True:
-                indx = checkCollision(event.key, letters, generated_letters)
-                if indx >= 0:
+			if event.key in ascii_letters and game_active == True:
+				indx = checkCollision(event.key, letters, generated_letters)
+				if indx >= 0:
                     # Remove those letters from list and add to word
-                    curr_word = curr_word + generated_letters[indx]
-                    generated_letters.pop(indx)
-                    letters.pop(indx)
+					curr_word = curr_word + generated_letters[indx]
+					generated_letters.pop(indx)
+					letters.pop(indx)
 
-            if event.key == pygame.K_RETURN and game_active == True:
-                evaluateWord()
+			if event.key == pygame.K_RETURN and game_active == True:
+				evaluateWord()
 
-            if event.key == pygame.K_ESCAPE:
-                if game_active == True:
-                    paused = True
-                    game_active = False
-                else:
-                    paused = False
-                    game_active = True
+			if event.key == pygame.K_ESCAPE:
+				if game_active == True:
+					paused = True
+					game_active = False
+				else:
+					paused = False
+					game_active = True
     
-        if event.type == SPAWNLETTER and game_active == True:
-            letter_knt = choices(population = letter_knt_population, weights = letter_knt_weights)[0]
-            letters.extend(createLetters(letter_knt,generated_letters))
+		if event.type == SPAWNLETTER and game_active == True:
+			letter_knt = choices(population = letter_knt_population, weights = letter_knt_weights)[0]
+			letters.extend(createLetters(letter_knt,generated_letters))
 
-        if event.type == pygame.MOUSEBUTTONUP:
-            if paused == False:
-                if(pause_btn_box.collidepoint(pygame.mouse.get_pos())):
-                    paused = True
-                    game_active = False
-            else:
-                if(play_btn_box.collidepoint(pygame.mouse.get_pos())):
-                    paused = False
-                    game_active = True
+		if event.type == pygame.MOUSEBUTTONUP:
+			if paused == False:
+				if(pause_btn_box.collidepoint(pygame.mouse.get_pos())):
+					paused = True
+					game_active = False
+			else:
+				if(play_btn_box.collidepoint(pygame.mouse.get_pos())):
+					paused = False
+					game_active = True
 
-            if(close_btn_box.collidepoint(pygame.mouse.get_pos())):
-                evaluateWord()
-                exitGame()
+			if(close_btn_box.collidepoint(pygame.mouse.get_pos())):
+				evaluateWord()
+				exitGameMenu()
 
-            if(restart_btn_box.collidepoint(pygame.mouse.get_pos())):
-                startGame()
+			if(restart_btn_box.collidepoint(pygame.mouse.get_pos())):
+				startGame()
 
-            if sound == True:
-                if(sound_on_box.collidepoint(pygame.mouse.get_pos())):
-                    sound = False
-                    pygame.mixer.music.pause()
-            else:
-                if(sound_off_box.collidepoint(pygame.mouse.get_pos())):
-                    sound = True
-                    pygame.mixer.music.unpause()
+			if sound == True:
+				if(sound_on_box.collidepoint(pygame.mouse.get_pos())):
+					sound = False
+					pygame.mixer.music.pause()
+			else:
+				if(sound_off_box.collidepoint(pygame.mouse.get_pos())):
+					sound = True
+					pygame.mixer.music.unpause()
 
         # For every second update counter
-        if event.type == TIMER and game_active == True:
-            counter -= 1
+		if event.type == TIMER and game_active == True:
+			counter -= 1
 
     # When game is active
-    if game_active == True:
+	if game_active == True:
 
         # Check for TIMEOUT
-        if counter == 0:
-            if score >= TARGET_SCORE[level]:
-                print("Congrats. Passed to next level")
-                nextLevel(level)
-                counter = LVL_TIMEOUT
-            else:
-                print("Game Over")
-                evaluateWord()
-                exitGame()
+		if counter == 0:
+			if score >= TARGET_SCORE[level]:
+				print("Congrats. Passed to next level")
+				nextLevel(level)
+				counter = LVL_TIMEOUT
+			else:
+				print("Game Over")
+				evaluateWord()
+				exitGame()
 
-        # Display bg surface
-        screen.blit(bg_surface,(0, 0))
-        
-        # Display headline
-        displayHeader(score,counter)        
+		# Display bg surface
+		screen.blit(bg_surface,(0, 0))
 
-        # Display the catching region
-        screen.blit(catch_surface, catch_box)
+		# Display headline
+		displayHeader(score,counter)
 
-        # Move the letters
-        letters = moveLetters(letters)
-        drawLetters(letters,generated_letters)
+		# Display the catching region
+		screen.blit(catch_surface, catch_box)
 
-        # Display word formed so far
-        wordFormed(curr_word)
+		# Move the letters
+		letters = moveLetters(letters)
+		drawLetters(letters,generated_letters)
 
-        # Display pasue button
-        screen.blit(pause_btn_surface, pause_btn_box)
+		# Display word formed so far
+		wordFormed(curr_word)
 
-        # Display sound button
-        if sound == True:
-            screen.blit(sound_on_surface,sound_on_box)
-        else:
-            screen.blit(sound_off_surface,sound_off_box)
+		# Display pause button
+		screen.blit(pause_btn_surface, pause_btn_box)
 
-    if paused == True:
-        displayPauseScreen()
+		# Display sound button
+		if sound == True:
+			screen.blit(sound_on_surface,sound_on_box)
+		else:
+			screen.blit(sound_off_surface,sound_off_box)
+
+	if paused == True:
+		displayPauseScreen()
 
     # Update display
-    pygame.display.update()
-    clock.tick(FPS)
+	pygame.display.update()
+	clock.tick(FPS)
