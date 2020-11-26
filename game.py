@@ -706,8 +706,9 @@ while True:
                 counter = LVL_TIMEOUT
             else:
                 print("Game Over")
-                print(total_score)
                 evaluateWord()
+                total_score += score
+                print(total_score)
                 game_active = False
                 game_over_animate += 1
 
