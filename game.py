@@ -674,7 +674,7 @@ while True:
             if(paused == True and restart_btn_box.collidepoint(pygame.mouse.get_pos())):
                 lvl_animate += 1
 
-            if(close_btn_box_1.collidepoint(pygame.mouse.get_pos()) and not game_active and not paused):
+            if(nxt_lvl_animate > 0 and close_btn_box_1.collidepoint(pygame.mouse.get_pos())):
                 exitGameMenu()
 
             if(nxt_lvl_animate > 0 and restart_btn_box_1.collidepoint(pygame.mouse.get_pos())):
