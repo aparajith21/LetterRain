@@ -162,6 +162,7 @@ def startGame():
     letters = []
     generated_letters = []
     score = 0
+    total_score = 0
     curr_word = ""
     counter = LVL_TIMEOUT
 
@@ -324,7 +325,7 @@ def exitGameMenu():
     name_entry_txt = "Enter your nickname"
     nameEntry = mediumFont.render(name_entry_txt, True, BLACK)
     nameEntryRect = nameEntry.get_rect()
-    nameEntryRect.center = ((WIN_WIDTH / 2), 400)
+    nameEntryRect.center = ((WIN_WIDTH // 2), 10 * WIN_HEIGHT // 19)
 
     color_inactive = pygame.Color(GRAY)
     color_active = pygame.Color(WHITE)
