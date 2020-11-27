@@ -137,6 +137,7 @@ def exitGame():
     Close the game
     """
     global score
+    f.close()
     pygame.quit()
     print("Score: ", score)
     sys.exit()
@@ -673,7 +674,7 @@ while True:
             if(paused == True and restart_btn_box.collidepoint(pygame.mouse.get_pos())):
                 lvl_animate += 1
 
-            if(game_active == False and close_btn_box_1.collidepoint(pygame.mouse.get_pos())):
+            if(close_btn_box_1.collidepoint(pygame.mouse.get_pos()) and not game_active and not paused):
                 exitGameMenu()
 
             if(nxt_lvl_animate > 0 and restart_btn_box_1.collidepoint(pygame.mouse.get_pos())):
@@ -762,7 +763,7 @@ while True:
         # Display word formed so far
         wordFormed(curr_word)
 
-        # Display pasue button
+        # Display pause button
         screen.blit(pause_btn_surface, pause_btn_box)
 
         # Display sound button
