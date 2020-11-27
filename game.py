@@ -162,6 +162,7 @@ def startGame():
     letters = []
     generated_letters = []
     score = 0
+    total_score = 0
     curr_word = ""
     counter = LVL_TIMEOUT
 
