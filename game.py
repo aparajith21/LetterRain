@@ -213,7 +213,6 @@ def nextLevel():
         screen.blit(level_score_lbl, (WIN_WIDTH/2 - 70, WIN_HEIGHT/2))
              
         if nxt_lvl_animate > 3 and nxt_lvl_animate <= 4:
-            screen.blit(level_score_txt, (WIN_WIDTH/2, WIN_HEIGHT/2 + 50))
             screen.blit(no_star_surface, (WIN_WIDTH/2 - 110, WIN_HEIGHT/2 - 120))
             screen.blit(level_score_txt, (WIN_WIDTH/2, WIN_HEIGHT/2 + 50))
 
@@ -231,13 +230,26 @@ def gameOver():
     Function to display "Game Over"
     """
 
-    global game_over_animate
+    global game_over_animate, score, total_score
 
     screen.blit(bg_surface,(0, 0))
 
     if game_over_animate <= 3:
         game_over_txt = game_over_font.render('GAME OVER', True, (0,0,0))
         screen.blit(game_over_txt, (WIN_WIDTH/2 - 120, WIN_HEIGHT/2 - 100))
+    elif game_over_animate < 6:
+        screen.blit(bg_score_level_1,  (WIN_WIDTH/2 - 180, WIN_HEIGHT/2 - 180))
+        screen.blit(bg_score_table,  (WIN_WIDTH/2 - 150, WIN_HEIGHT/2 - 170))
+        screen.blit(lose_level_surface, (WIN_WIDTH/2 - 180, WIN_HEIGHT/2 - 250))
+        level_score_lbl = score_font.render('LEVEL SCORE', True, (0,0,0))
+        level_score_txt = score_font.render(str(score), True, (1,1,0))
+        total_score_lbl = score_font.render('TOTAL SCORE', True, (0,0,0))
+        total_score_txt = score_font.render(str(total_score), True, (1,1,0))
+        screen.blit(level_score_lbl, (WIN_WIDTH/2 - 70, WIN_HEIGHT/2))
+        screen.blit(level_score_txt, (WIN_WIDTH/2, WIN_HEIGHT/2 + 50))
+        screen.blit(total_score_lbl, (WIN_WIDTH/2 - 70, WIN_HEIGHT/2 - 100))
+        screen.blit(total_score_txt, (WIN_WIDTH/2, WIN_HEIGHT/2 - 50))
+
     else:
         game_over_animate = 0
         exitGameMenu()
@@ -477,6 +489,7 @@ lvl_completed_surface = pygame.transform.scale(lvl_completed_surface,(400,100))
 
 # Import scorecard surface
 bg_score_level = pygame.image.load('assets/bg_level.png').convert_alpha()
+bg_score_level_1 = pygame.transform.scale(bg_score_level,(int(0.3 * bg_score_level.get_width()),int(0.3 * bg_score_level.get_height())))
 bg_score_level = pygame.transform.scale(bg_score_level,(int(0.3 * bg_score_level.get_width()),int(0.3 * bg_score_level.get_height()) + 10))
 
 # Import table for scroecard surface
@@ -486,6 +499,10 @@ bg_score_table = pygame.transform.scale(bg_score_table, ((int(0.3 * bg_score_tab
 # Import win surface for scorecard
 win_level_surface = pygame.image.load('assets/win_level.png').convert_alpha()
 win_level_surface = pygame.transform.scale(win_level_surface, ((int(0.4 * win_level_surface.get_width()),int(0.4 * win_level_surface.get_height()))))
+
+# Import lose surface for scoreboard
+lose_level_surface = pygame.image.load('assets/lose_level.png').convert_alpha()
+lose_level_surface = pygame.transform.scale(lose_level_surface, ((int(0.4 * lose_level_surface.get_width()),int(0.4 * lose_level_surface.get_height()))))
 
 # Import no star
 no_star_surface = pygame.image.load('assets/star_4.png').convert_alpha()
@@ -658,12 +675,12 @@ while True:
             if(close_btn_box_1.collidepoint(pygame.mouse.get_pos())):
                 exitGameMenu()
 
-            if(restart_btn_box_1.collidepoint(pygame.mouse.get_pos())):
+            if(nxt_lvl_animate > 0 and restart_btn_box_1.collidepoint(pygame.mouse.get_pos())):
                 score = 0
                 nxt_lvl_animate = 0
                 lvl_animate += 1
 
-            if(nxt_btn_box.collidepoint(pygame.mouse.get_pos())):
+            if(nxt_lvl_animate > 0 and nxt_btn_box.collidepoint(pygame.mouse.get_pos())):
                 nxt_lvl_animate = 0
                 level += 1
                 score = 0
@@ -698,6 +715,7 @@ while True:
 
         # Check for TIMEOUT
         if counter == 0:
+            evaluateWord()
             if score >= TARGET_SCORE[level]:
                 print("Congrats. Passed to next level")
                 game_active = False
@@ -706,7 +724,6 @@ while True:
                 counter = LVL_TIMEOUT
             else:
                 print("Game Over")
-                evaluateWord()
                 total_score += score
                 print(total_score)
                 game_active = False
