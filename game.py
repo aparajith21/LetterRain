@@ -448,7 +448,7 @@ popped_letter = []
 # Level Information
 level = 0
 TARGET_SCORE = [1,20,30,40,50]
-LVL_TIMEOUT = 10
+LVL_TIMEOUT = 30
 counter = 0
 paused = False
 sound = True
@@ -678,8 +678,8 @@ while True:
                 exitGameMenu()
 
             if(nxt_lvl_animate > 0 and restart_btn_box_1.collidepoint(pygame.mouse.get_pos())):
+                total_score -= score
                 score = 0
-                total_score = 0
                 nxt_lvl_animate = 0
                 lvl_animate += 1
 
