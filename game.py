@@ -679,6 +679,7 @@ while True:
 
             if(nxt_lvl_animate > 0 and restart_btn_box_1.collidepoint(pygame.mouse.get_pos())):
                 score = 0
+                total_score = 0
                 nxt_lvl_animate = 0
                 lvl_animate += 1
 
