@@ -320,7 +320,7 @@ def exitGameMenu():
     """
     Displays the exit view
     """
-    global sound, leaderboard, score, close_btn_surface, play_btn_surface, restart_btn_surface, lvl_animate, level
+    global sound, leaderboard, score, total_score, close_btn_surface, play_btn_surface, restart_btn_surface, lvl_animate, level
     input_box = pygame.Rect((WIN_WIDTH - 140)// 2, 5 * WIN_HEIGHT // 9, 140, 32)
 
     name_entry_txt = "Enter your nickname"
@@ -350,6 +350,7 @@ def exitGameMenu():
                 if(restart_btn_box_exit.collidepoint(pygame.mouse.get_pos())):
                     level = 0
                     lvl_animate = 1
+                    total_score = 0
                     return True
 
                 color = color_active if active else color_inactive
