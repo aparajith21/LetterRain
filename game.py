@@ -666,14 +666,14 @@ while True:
                     paused = False
                     game_active = True
 
-            if(close_btn_box.collidepoint(pygame.mouse.get_pos())):
+            if(paused == True and close_btn_box.collidepoint(pygame.mouse.get_pos())):
                 evaluateWord()
                 exitGameMenu()
 
-            if(restart_btn_box.collidepoint(pygame.mouse.get_pos())):
+            if(paused == True and restart_btn_box.collidepoint(pygame.mouse.get_pos())):
                 lvl_animate += 1
 
-            if(close_btn_box_1.collidepoint(pygame.mouse.get_pos())):
+            if(game_active == False and close_btn_box_1.collidepoint(pygame.mouse.get_pos())):
                 exitGameMenu()
 
             if(nxt_lvl_animate > 0 and restart_btn_box_1.collidepoint(pygame.mouse.get_pos())):
