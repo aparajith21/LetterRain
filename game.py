@@ -321,19 +321,25 @@ def exitGameMenu():
     Displays the exit view
     """
     global sound, leaderboard, score, total_score, close_btn_surface, play_btn_surface, restart_btn_surface, lvl_animate, level
-    input_box = pygame.Rect((WIN_WIDTH - 140)// 2, 5 * WIN_HEIGHT // 9, 140, 32)
+    input_box = pygame.Rect((WIN_WIDTH - 140)// 2, 10 * WIN_HEIGHT // 19, 140, 32)
 
-    name_entry_txt = "Enter your nickname"
-    nameEntry = mediumFont.render(name_entry_txt, True, BLACK)
-    nameEntryRect = nameEntry.get_rect()
-    nameEntryRect.center = ((WIN_WIDTH // 2), 10 * WIN_HEIGHT // 19)
+#    name_entry_txt = "Enter your nickname"
+#    nameEntry = mediumFont.render(name_entry_txt, True, BLACK)
+#    nameEntryRect = nameEntry.get_rect()
+#    nameEntryRect.center = ((WIN_WIDTH // 2), 10 * WIN_HEIGHT // 19)
+
+    s = pygame.Surface((140, 32))  # the size of your rect
+    s.set_alpha(128)                # alpha level
+#    s.fill(GRAY)           # this fills the entire surface
+
 
     color_inactive = pygame.Color(GRAY)
     color_active = pygame.Color(WHITE)
     color = color_inactive
     active = False
-    text = ''
+    text = 'Enter nickname'
     accepted = False
+
 
     while True:
         for event in pygame.event.get():
@@ -364,10 +370,15 @@ def exitGameMenu():
                     if(sound_off_box.collidepoint(pygame.mouse.get_pos())):
                         sound = True
                         pygame.mixer.music.unpause()
+
+                if not active and not text:
+                    text = 'Enter nickname'
+
        
             if event.type == pygame.KEYDOWN:
                 # input the name
                 if active and not accepted:
+                    text = '' if text == 'Enter nickname' else text
                     if event.key == pygame.K_RETURN and len(text) > 0:
                         # update leaderboard
                         updateLeaderboard(text)
@@ -379,6 +390,8 @@ def exitGameMenu():
                         # max name length = 12
                     elif len(text) < 12:
                         text += event.unicode
+
+
          # Display bg surface
         screen.blit(bg_surface,(0, 0))
 
@@ -387,10 +400,12 @@ def exitGameMenu():
 
         # draw name input box
         if not accepted:
-            pygame.draw.rect(screen, color, input_box, 0)
-            screen.blit(nameEntry, nameEntryRect)
+#            pygame.draw.rect(screen, color, input_box, 0)
+#            screen.blit(nameEntry, nameEntryRect)
             txt_surface = font.render(text, True, BLACK)
             screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+            s.fill(color)
+            screen.blit(s, (input_box.x, input_box.y))
 
         # Display sound button
         if sound == True:
