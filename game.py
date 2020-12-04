@@ -239,7 +239,7 @@ def gameOver():
     if game_over_animate <= 3:
         game_over_txt = game_over_font.render('GAME OVER', True, (0,0,0))
         screen.blit(game_over_txt, (WIN_WIDTH/2 - 120, WIN_HEIGHT/2 - 100))
-    elif game_over_animate < 6:
+    elif game_over_animate < 10:
         screen.blit(bg_score_level_1,  (WIN_WIDTH/2 - 180, WIN_HEIGHT/2 - 180))
         screen.blit(bg_score_table,  (WIN_WIDTH/2 - 150, WIN_HEIGHT/2 - 170))
         screen.blit(lose_level_surface, (WIN_WIDTH/2 - 180, WIN_HEIGHT/2 - 250))
@@ -449,7 +449,7 @@ popped_letter = []
 # Level Information
 level = 0
 TARGET_SCORE = [1,20,30,40,50]
-LVL_TIMEOUT = 30
+LVL_TIMEOUT = 10
 counter = 0
 paused = False
 sound = True
