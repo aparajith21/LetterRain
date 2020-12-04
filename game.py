@@ -351,6 +351,7 @@ def exitGameMenu():
                     level = 0
                     lvl_animate = 1
                     total_score = 0
+                    score = 0
                     return True
 
                 color = color_active if active else color_inactive
