@@ -131,6 +131,7 @@ def displayHeader(curr_score, curr_time):
     """
     Function to display the headlines - time, score and level information
     """
+    global level
 
     # Display timer
     screen.blit(time_display_surface, (10,10))
@@ -141,6 +142,12 @@ def displayHeader(curr_score, curr_time):
     screen.blit(score_display_surface, (WIN_WIDTH - 160,10))
     score_txt = font.render(f'{score}', True, (0, 0, 0))
     screen.blit(score_txt, (WIN_WIDTH-80, 25))
+
+    # Disply the level target
+    screen.blit(target_display_surface, (WIN_WIDTH - 160,70))
+    target_txt = font.render(f'Target: {TARGET_SCORE[level]}', True, (0, 0, 0))
+    screen.blit(target_txt, (WIN_WIDTH-130, 85))
+
 
 def exitGame():
     """
@@ -556,7 +563,7 @@ popped_letter = []
 
 # Level Information
 level = 0
-TARGET_SCORE = [1,20,30,40,50]
+TARGET_SCORE = [1,20,30,40,50,60,65,70,75,80,85]
 LVL_TIMEOUT = 30
 counter = 0
 paused = False
@@ -750,6 +757,10 @@ time_display_surface = pygame.transform.scale(time_display_surface, (150,50))
 score_display_surface = pygame.image.load('assets/money.png').convert_alpha()
 score_display_surface = pygame.transform.scale(score_display_surface, (150,50))
 
+# Import target headline
+target_display_surface = pygame.image.load('assets/header_label.png').convert_alpha()
+target_display_surface = pygame.transform.scale(target_display_surface, (150,50))
+
 # Create dictionary of the letter and image surface corresponding to it
 LETTERS = list(map(chr, range(65, 91)))
 LETTERS = {char : pygame.image.load('assets/letters/' + char + '.jpg').convert() for char in LETTERS}
@@ -890,7 +901,6 @@ while True:
             if start_game_animate > 0:
                 start_game_animate += 1
 
-
     # When game is active
     if game_active == True:
 
@@ -912,7 +922,6 @@ while True:
 
         # Display bg surface
         screen.blit(bg_surface,(0, 0))
-
         
         # Display headline
         displayHeader(score,counter)        
@@ -924,7 +933,7 @@ while True:
         letters = moveLetters(letters)
         drawLetters(letters,generated_letters)
 
-#        Display River
+        # Display River
         displayRiver()
 
         # Check if blast list is non-empty
@@ -943,7 +952,6 @@ while True:
             letter.state += 1
             i += 1
 
-
         # Display word formed so far
         wordFormed(curr_word)
 
@@ -955,7 +963,6 @@ while True:
             screen.blit(sound_on_surface,sound_on_box)
         else:
             screen.blit(sound_off_surface,sound_off_box)
-
 
     if paused == True:
         displayPauseScreen()
@@ -976,7 +983,6 @@ while True:
     if game_over_animate > 0:
         gameOver()
 
-  
     # Update display 
     pygame.display.update()
     clock.tick(FPS)
