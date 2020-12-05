@@ -211,12 +211,7 @@ def startUp():
     screen.blit(start_close_btn_surface, start_close_btn_box)
     screen.blit(start_leader_btn_surface,start_leader_btn_box)
 
-
-<<<<<<< HEAD
      # Loop 2 times and add 2 new rain drops in random x,y position
-=======
-         # Loop 50 times and add 50 new rain drops in random x,y position
->>>>>>> 60804c84db0706ddd78d05421712258d66c825af
     for i in range(2):
         x = random.randrange(-5, WIN_WIDTH + 5)
         y = random.randrange(-5, -2)
