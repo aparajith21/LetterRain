@@ -682,7 +682,7 @@ for item in WATER.keys():
     WATER[item] = pygame.transform.scale(WATER[item],(int(0.5*WATER[item].get_width()),int(0.5*WATER[item].get_height())))
 
 # Define the catch section
-catch_surface = pygame.Surface((WIN_WIDTH,WIN_HEIGHT - WATER[item].get_height()))
+catch_surface = pygame.Surface((WIN_WIDTH,WIN_HEIGHT - 2 * WATER[item].get_height()))
 catch_surface.set_alpha(0)
 #catch_surface.fill((255,255,255))
 
