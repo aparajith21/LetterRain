@@ -792,7 +792,10 @@ while True:
     # Event Loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            exitGameMenu()
+            if game_started:
+                exitGameMenu()
+            else:
+                exitGame()
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and game_active == False:
