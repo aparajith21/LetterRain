@@ -315,9 +315,9 @@ def nextLevel():
 
         if nxt_lvl_animate > 4: 
             screen.blit(level_score_txt, (WIN_WIDTH/2, WIN_HEIGHT/2 + 50))
-            if score < 2 * TARGET_SCORE[level]:
+            if score < min(2 * TARGET_SCORE[level], TARGET_SCORE[level] + 10):
                 screen.blit(one_star_surface, (WIN_WIDTH/2 - 110, WIN_HEIGHT/2 - 120))
-            elif score < 3 * TARGET_SCORE[level]:
+            elif score < min(3 * TARGET_SCORE[level], TARGET_SCORE[level] + 20):
                 screen.blit(two_star_surface, (WIN_WIDTH/2 - 110, WIN_HEIGHT/2 - 120))
             else:
                 screen.blit(three_star_surface, (WIN_WIDTH/2 - 110, WIN_HEIGHT/2 - 120))
@@ -563,8 +563,8 @@ popped_letter = []
 
 # Level Information
 level = 0
-TARGET_SCORE = [1,20,30,40,50,60,65,70,75,80,85]
-LVL_TIMEOUT = 30
+TARGET_SCORE = [10,20,30,40,50,60,65,70,75,80]
+LVL_TIMEOUT = 60
 counter = 0
 paused = False
 sound = True
