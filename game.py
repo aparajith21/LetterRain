@@ -400,7 +400,7 @@ def exitGameMenu():
     """
     Displays the exit view
     """
-    global sound, leaderboard, score, total_score, close_btn_surface, play_btn_surface, restart_btn_surface, lvl_animate, level
+    global sound, leaderboard, score, total_score, close_btn_surface, play_btn_surface, restart_btn_surface, lvl_animate, level, game_started
     input_box = pygame.Rect((WIN_WIDTH - 140)// 2, 10 * WIN_HEIGHT // 19, 140, 32)
 
 #    name_entry_txt = "Enter your nickname"
@@ -408,10 +408,16 @@ def exitGameMenu():
 #    nameEntryRect = nameEntry.get_rect()
 #    nameEntryRect.center = ((WIN_WIDTH // 2), 10 * WIN_HEIGHT // 19)
 
-    s = pygame.Surface((140, 32))  # the size of your rect
+    s = pygame.Surface((140, 32))  # the size of rect
     s.set_alpha(128)                # alpha level
-#    s.fill(GRAY)           # this fills the entire surface
 
+
+    # close button
+    close_btn_surface_exit = pygame.transform.scale(close_btn_surface, (100,100))
+    close_btn_box_exit = close_btn_surface_exit.get_rect(center = ((WIN_WIDTH/2 + 120,3 * WIN_HEIGHT // 4)))
+#     restart button
+    restart_btn_surface_exit = pygame.transform.scale(restart_btn_surface, (100,100))
+    restart_btn_box_exit = restart_btn_surface_exit.get_rect(center = ((WIN_WIDTH/2 - 120, 3 * WIN_HEIGHT // 4)))
 
     color_inactive = pygame.Color(GRAY)
     color_active = pygame.Color(WHITE)
@@ -432,12 +438,15 @@ def exitGameMenu():
                 if(close_btn_box_exit.collidepoint(pygame.mouse.get_pos())):
                     exitGame()
 
-                if(restart_btn_box_exit.collidepoint(pygame.mouse.get_pos())):
+                if(game_started and restart_btn_box_exit.collidepoint(pygame.mouse.get_pos())):
                     level = 0
                     lvl_animate = 1
                     total_score = 0
                     score = 0
                     return True
+
+                if not game_started and menu_box.collidepoint(pygame.mouse.get_pos()):
+                    return startUp()
 
                 color = color_active if active else color_inactive
 
@@ -478,7 +487,7 @@ def exitGameMenu():
         displayLeaderboard()
 
         # draw name input box
-        if not accepted:
+        if not accepted and game_started:
 #            pygame.draw.rect(screen, color, input_box, 0)
 #            screen.blit(nameEntry, nameEntryRect)
             txt_surface = font.render(text, True, BLACK)
@@ -492,15 +501,13 @@ def exitGameMenu():
         else:
             screen.blit(sound_off_surface,sound_off_box)
 
-        # close button
-        close_btn_surface_exit = pygame.transform.scale(close_btn_surface, (100,100))
-        close_btn_box_exit = close_btn_surface_exit.get_rect(center = ((WIN_WIDTH/2 + 120,3 * WIN_HEIGHT // 4)))
 
-        # restart button
-        restart_btn_surface_exit = pygame.transform.scale(restart_btn_surface, (100,100))
-        restart_btn_box_exit = restart_btn_surface_exit.get_rect(center = ((WIN_WIDTH/2 - 120, 3 * WIN_HEIGHT // 4)))
 
-        screen.blit(restart_btn_surface_exit, restart_btn_box_exit)
+        if game_started:
+            # restart button blit
+            screen.blit(restart_btn_surface_exit, restart_btn_box_exit)
+        else:
+            screen.blit(menu_surface, menu_box)
         screen.blit(close_btn_surface_exit, close_btn_box_exit)
 
         # Update display
@@ -562,6 +569,11 @@ SPWN_TIME = 800
 screen = pygame.display.set_mode(WIN_SIZE)
 
 clock = pygame.time.Clock()
+
+# import menu button
+menu_surface = pygame.image.load('assets/menu.png')
+menu_surface = pygame.transform.scale(menu_surface,(100,100))
+menu_box = menu_surface.get_rect(center = ((WIN_WIDTH/2 - 120, 3 * WIN_HEIGHT // 4)))
 
 # Import blast surfaces
 blast0_surface = pygame.image.load('assets/1_fireboll_1.png')
@@ -812,7 +824,7 @@ while True:
                     sys.exit()
 
                 if(start_leader_btn_box.collidepoint(pygame.mouse.get_pos())):
-                    print('leader')
+                    exitGameMenu()
 
             if paused == False:
                 if(pause_btn_box.collidepoint(pygame.mouse.get_pos())):
