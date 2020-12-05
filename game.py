@@ -184,7 +184,7 @@ def startUp():
         screen.blit(WATER[i], ((i-1) * WATER[1].get_width() - move, WIN_HEIGHT - WATER[1].get_height()))
         screen.blit(WATER[i], ((17 + i-1) * WATER[1].get_width() - move, WIN_HEIGHT - WATER[1].get_height()))
 
-     # Loop 50 times and add 50 new rain drops in random x,y position
+     # Loop 2 times and add 2 new rain drops in random x,y position
     for i in range(2):
         x = random.randrange(-5, WIN_WIDTH + 5)
         y = random.randrange(-5, -2)
