@@ -1,6 +1,7 @@
 import GenerateLetters
 import WordScore
 import pygame
+import random
 from random import choices
 from random import uniform
 from math import exp
@@ -22,11 +23,20 @@ OFFSET = 80
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (200, 200, 255)
+GRAY = (200, 200, 255)
+RAIN_COLOR = (150, 220, 255)
 
 # define a class to maintain letter popped and animation state
 class Blast:
     def __init__(self,letter_surface,state):
         self.letter_surface = letter_surface
+        self.state = 0
+
+# define a class to do splsh effect
+class Splash:
+    def __init__(self,x, y,state):
+        self.x = x
+        self.y = y
         self.state = 0
 
 # read leaderboard
@@ -153,6 +163,78 @@ def displayPauseScreen():
     screen.blit(restart_btn_surface, restart_btn_box)
     screen.blit(close_btn_surface, close_btn_box)
 
+# Define rain list to keep track of each drop of rain
+rain_list = []
+move = 0
+splashed_drops = []
+def startUp():
+    """
+    Function that displays the start up screen
+    """
+    global move, splashed_drops
+    screen.blit(bg_start_surface,(0, 0))
+
+    # Display button
+    screen.blit(start_play_btn_surface, start_play_btn_box)
+    screen.blit(start_close_btn_surface, start_close_btn_box)
+    screen.blit(start_leader_btn_surface,start_leader_btn_box)
+
+    # display water surface
+    for i in range(1,18):
+        screen.blit(WATER[i], ((i-1) * WATER[1].get_width() - move, WIN_HEIGHT - WATER[1].get_height()))
+        screen.blit(WATER[i], ((17 + i-1) * WATER[1].get_width() - move, WIN_HEIGHT - WATER[1].get_height()))
+
+     # Loop 50 times and add 50 new rain drops in random x,y position
+    for i in range(2):
+        x = random.randrange(-5, WIN_WIDTH + 5)
+        y = random.randrange(-5, -2)
+        rain_list.append([x, y])
+
+    # Print each rain drop in the list
+    i = 0
+    while(i < len(rain_list)):
+
+        # Draw the rain drop
+        pygame.draw.rect(screen,RAIN_COLOR, (rain_list[i][0],rain_list[i][1],2,15))
+
+        # Update y position of the drop
+        rain_list[i][1] += 5
+        if rain_list[i][1] >= WIN_HEIGHT - 100:
+            splash = Splash(rain_list[i][0],rain_list[i][1],0)
+            splashed_drops.append(splash)
+            rain_list.pop(i)
+            i = i-1
+        i += 1
+
+    # Go through the splash list
+    i = 0
+    while i < len(splashed_drops): 
+        drop = splashed_drops[i]
+        if drop.state < 10:
+            screen.blit(splash0_surface,(drop.x,drop.y))
+        elif drop.state < 20:
+            screen.blit(splash1_surface,(drop.x,drop.y))
+        elif drop.state < 30:
+            screen.blit(splash2_surface,(drop.x,drop.y))
+        elif drop.state < 40:
+            screen.blit(splash3_surface,(drop.x,drop.y))
+        else:
+            splashed_drops.pop(i)
+            i -= 1
+        drop.state += 1
+        i += 1          
+
+    move += 1
+    if(move > 17 * WATER[1].get_width()):
+        move = 0
+
+    # Display sound button
+    if sound == True:
+        screen.blit(sound_on_surface,sound_on_box)
+    else:
+        screen.blit(sound_off_surface,sound_off_box)
+
+
 def startGame():
     """
     function to init parameters to start the game
@@ -256,8 +338,6 @@ def gameOver():
         game_over_animate = 0
         exitGameMenu()
 
-
-
 def displayLeaderboard():
     """
     Prints leaderboard on the game window
@@ -339,7 +419,6 @@ def exitGameMenu():
     active = False
     text = 'Enter nickname'
     accepted = False
-
 
     while True:
         for event in pygame.event.get():
@@ -472,6 +551,8 @@ sound = True
 lvl_animate = 0
 nxt_lvl_animate = 0
 game_over_animate = 0
+start_game_animate = 0
+game_started = False
 
 # Define FPS & SPAWN_TIME
 FPS = 60
@@ -491,6 +572,34 @@ blast1_surface = pygame.transform.scale(blast1_surface, (IMG_WIDTH,IMG_HEIGHT))
 
 blast2_surface = pygame.image.load('assets/1_fireboll_3.png')
 blast2_surface = pygame.transform.scale(blast2_surface, (IMG_WIDTH,IMG_HEIGHT))
+
+# Import splash surfaces
+splash0_surface = pygame.image.load('assets/splash/splash_1.png')
+# splash0_surface = pygame.transform(splash0_surface,())
+
+splash1_surface = pygame.image.load('assets/splash/splash_2.png')
+# splash1_surface = pygame.transform(splash1_surface,())
+
+splash2_surface = pygame.image.load('assets/splash/splash_3.png')
+# splash2_surface = pygame.transform(splash2_surface,())
+
+splash3_surface = pygame.image.load('assets/splash/splash_4.png')
+# splash3_surface = pygame.transform(splash3_surface,())
+
+# Import the buttons for the startup screen
+start_play_btn_surface = pygame.image.load('assets/play.png').convert_alpha()
+start_play_btn_surface = pygame.transform.scale(start_play_btn_surface,(100,100))
+start_play_btn_box = start_play_btn_surface.get_rect(center = ((WIN_WIDTH/2 - 120,WIN_HEIGHT/2 + 20)))
+
+# Import close button
+start_close_btn_surface = pygame.image.load('assets/close.png').convert_alpha()
+start_close_btn_surface = pygame.transform.scale(start_close_btn_surface, (100,100))
+start_close_btn_box = start_close_btn_surface.get_rect(center = ((WIN_WIDTH/2 + 150,WIN_HEIGHT/2 + 20)))
+
+# Import leaderboard button
+start_leader_btn_surface = pygame.image.load('assets/prize.png').convert_alpha()
+start_leader_btn_surface = pygame.transform.scale(start_leader_btn_surface, (100,100))
+start_leader_btn_box = start_leader_btn_surface.get_rect(center = ((WIN_WIDTH/2 + 15,WIN_HEIGHT/2 + 20)))
 
 # Import level surface
 level_surface = pygame.image.load('assets/level.png').convert_alpha()
@@ -542,6 +651,16 @@ three_star_surface = pygame.transform.scale(three_star_surface, (250,100))
 # Import bg surface
 bg_surface = pygame.image.load('assets/bg.png').convert()
 bg_surface = pygame.transform.scale(bg_surface,(WIN_WIDTH,WIN_HEIGHT))
+
+# Import bg surface for startup screen
+bg_start_surface = pygame.image.load('assets/start_screen.png').convert()
+bg_start_surface = pygame.transform.scale(bg_start_surface,(WIN_WIDTH,WIN_HEIGHT))
+
+# Water surface
+WATER = list(map(int,[i for i in range(1,18)]))
+WATER = {char : pygame.image.load('assets/water/image '+str(char)+'.png').convert_alpha() for char in WATER}
+for item in WATER.keys():
+    WATER[item] = pygame.transform.scale(WATER[item],(int(0.5*WATER[item].get_width()),int(0.5*WATER[item].get_height())))
 
 # Define the catch section
 catch_surface = pygame.Surface((WIN_WIDTH,100))
@@ -637,6 +756,10 @@ pygame.time.set_timer(TIMER, 1000)
 # Game Loop
 while True:
 
+    # Check if it is the startup screen
+    if game_active == False and game_started == False:
+        start_game_animate += 1
+
     # Event Loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -646,6 +769,8 @@ while True:
             if event.key == pygame.K_SPACE and game_active == False:
                 # Start the game
                 level = 0
+                start_game_animate = 0
+                game_started = True
                 lvl_animate += 1
                 
             if event.key in ascii_letters and game_active == True:
@@ -675,6 +800,20 @@ while True:
             letters.extend(createLetters(letter_knt,generated_letters))
 
         if event.type == pygame.MOUSEBUTTONUP:
+            if game_started == False and start_game_animate > 0:
+                if(start_play_btn_box.collidepoint(pygame.mouse.get_pos())):
+                    level = 0
+                    start_game_animate = 0
+                    game_started = True
+                    lvl_animate += 1
+
+                if(start_close_btn_box.collidepoint(pygame.mouse.get_pos())):
+                    pygame.quit()
+                    sys.exit()
+
+                if(start_leader_btn_box.collidepoint(pygame.mouse.get_pos())):
+                    print('leader')
+
             if paused == False:
                 if(pause_btn_box.collidepoint(pygame.mouse.get_pos())):
                     paused = True
@@ -729,6 +868,9 @@ while True:
 
             if game_over_animate > 0:
                 game_over_animate += 1
+
+            if start_game_animate > 0:
+                start_game_animate += 1
 
     # When game is active
     if game_active == True:
@@ -792,6 +934,10 @@ while True:
 
     if paused == True:
         displayPauseScreen()
+
+    # Check if it is the startuo screen
+    if start_game_animate > 0:
+        startUp()
 
     # Check if lvl_animate is active
     if lvl_animate > 0:
