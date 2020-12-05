@@ -167,6 +167,38 @@ def displayPauseScreen():
 rain_list = []
 move = 0
 splashed_drops = []
+
+def displayRiver():
+     # display water surface
+    global move
+    for i in range(1,18):
+        screen.blit(WATER[i], ((i-1) * WATER[1].get_width() - move, WIN_HEIGHT - WATER[1].get_height()))
+        screen.blit(WATER[i], ((17 + i-1) * WATER[1].get_width() - move, WIN_HEIGHT - WATER[1].get_height()))
+    if not game_started:
+        displaySplash()
+    move += 1
+    if(move > 17 * WATER[1].get_width()):
+        move = 0
+
+def displaySplash():
+    i = 0
+    while i < len(splashed_drops):
+        drop = splashed_drops[i]
+        if drop.state < 10:
+            screen.blit(splash0_surface,(drop.x,drop.y))
+        elif drop.state < 20:
+            screen.blit(splash1_surface,(drop.x,drop.y))
+        elif drop.state < 30:
+            screen.blit(splash2_surface,(drop.x,drop.y))
+        elif drop.state < 40:
+            screen.blit(splash3_surface,(drop.x,drop.y))
+        else:
+            splashed_drops.pop(i)
+            i -= 1
+        drop.state += 1
+        i += 1
+
+
 def startUp():
     """
     Function that displays the start up screen
@@ -179,12 +211,8 @@ def startUp():
     screen.blit(start_close_btn_surface, start_close_btn_box)
     screen.blit(start_leader_btn_surface,start_leader_btn_box)
 
-    # display water surface
-    for i in range(1,18):
-        screen.blit(WATER[i], ((i-1) * WATER[1].get_width() - move, WIN_HEIGHT - WATER[1].get_height()))
-        screen.blit(WATER[i], ((17 + i-1) * WATER[1].get_width() - move, WIN_HEIGHT - WATER[1].get_height()))
 
-     # Loop 50 times and add 50 new rain drops in random x,y position
+         # Loop 50 times and add 50 new rain drops in random x,y position
     for i in range(2):
         x = random.randrange(-5, WIN_WIDTH + 5)
         y = random.randrange(-5, -2)
@@ -205,28 +233,7 @@ def startUp():
             rain_list.pop(i)
             i = i-1
         i += 1
-
-    # Go through the splash list
-    i = 0
-    while i < len(splashed_drops): 
-        drop = splashed_drops[i]
-        if drop.state < 10:
-            screen.blit(splash0_surface,(drop.x,drop.y))
-        elif drop.state < 20:
-            screen.blit(splash1_surface,(drop.x,drop.y))
-        elif drop.state < 30:
-            screen.blit(splash2_surface,(drop.x,drop.y))
-        elif drop.state < 40:
-            screen.blit(splash3_surface,(drop.x,drop.y))
-        else:
-            splashed_drops.pop(i)
-            i -= 1
-        drop.state += 1
-        i += 1          
-
-    move += 1
-    if(move > 17 * WATER[1].get_width()):
-        move = 0
+    displayRiver()
 
     # Display sound button
     if sound == True:
@@ -540,7 +547,7 @@ largeFont = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 40)
 mediumFont = pygame.font.Font('assets/fonts/AvenirMedium.ttf', 28)
 
 # game variables
-gravity = 2
+gravity = 3
 game_active = False
 words_formed = []
 curr_word = ""
@@ -551,7 +558,7 @@ popped_letter = []
 # Level Information
 level = 0
 TARGET_SCORE = [1,20,30,40,50]
-LVL_TIMEOUT = 10
+LVL_TIMEOUT = 30
 counter = 0
 paused = False
 sound = True
@@ -675,9 +682,9 @@ for item in WATER.keys():
     WATER[item] = pygame.transform.scale(WATER[item],(int(0.5*WATER[item].get_width()),int(0.5*WATER[item].get_height())))
 
 # Define the catch section
-catch_surface = pygame.Surface((WIN_WIDTH,100))
-catch_surface.set_alpha(128)
-catch_surface.fill((255,255,255))
+catch_surface = pygame.Surface((WIN_WIDTH,WIN_HEIGHT - WATER[item].get_height()))
+catch_surface.set_alpha(0)
+#catch_surface.fill((255,255,255))
 
 catch_box = catch_surface.get_rect(center = ((WIN_WIDTH/2,WIN_HEIGHT/2)))
 
@@ -884,6 +891,7 @@ while True:
             if start_game_animate > 0:
                 start_game_animate += 1
 
+
     # When game is active
     if game_active == True:
 
@@ -905,6 +913,8 @@ while True:
 
         # Display bg surface
         screen.blit(bg_surface,(0, 0))
+    #        Display River
+        displayRiver()
         
         # Display headline
         displayHeader(score,counter)        
@@ -918,7 +928,7 @@ while True:
 
         # Check if blast list is non-empty
         i = 0
-        while i < len(popped_letter): 
+        while i < len(popped_letter):
             letter = popped_letter[i]
             if letter.state < 10:
                     screen.blit(blast0_surface,(letter.letter_surface[0],letter.letter_surface[1]))
@@ -930,7 +940,8 @@ while True:
                 popped_letter.pop(i)
                 i -= 1
             letter.state += 1
-            i += 1              
+            i += 1
+
 
         # Display word formed so far
         wordFormed(curr_word)
@@ -943,6 +954,7 @@ while True:
             screen.blit(sound_on_surface,sound_on_box)
         else:
             screen.blit(sound_off_surface,sound_off_box)
+
 
     if paused == True:
         displayPauseScreen()
@@ -962,6 +974,7 @@ while True:
     # Check if game_over_animate is active
     if game_over_animate > 0:
         gameOver()
+
   
     # Update display 
     pygame.display.update()
