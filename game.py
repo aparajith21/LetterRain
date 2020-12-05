@@ -912,8 +912,7 @@ while True:
 
         # Display bg surface
         screen.blit(bg_surface,(0, 0))
-    #        Display River
-        displayRiver()
+
         
         # Display headline
         displayHeader(score,counter)        
@@ -924,6 +923,9 @@ while True:
         # Move the letters
         letters = moveLetters(letters)
         drawLetters(letters,generated_letters)
+
+#        Display River
+        displayRiver()
 
         # Check if blast list is non-empty
         i = 0
