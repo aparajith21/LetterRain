@@ -128,7 +128,7 @@ minimum target score. The rating is done in a simple manner as follows:
 
 Look into the Game
 
-## Start Screen
+### Start Screen
 
 ![](images/image3.png)
 
