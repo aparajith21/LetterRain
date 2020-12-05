@@ -416,10 +416,6 @@ def exitGameMenu():
     global sound, leaderboard, score, total_score, close_btn_surface, play_btn_surface, restart_btn_surface, lvl_animate, level, game_started
     input_box = pygame.Rect((WIN_WIDTH - 140)// 2, 10 * WIN_HEIGHT // 19, 140, 32)
 
-#    name_entry_txt = "Enter your nickname"
-#    nameEntry = mediumFont.render(name_entry_txt, True, BLACK)
-#    nameEntryRect = nameEntry.get_rect()
-#    nameEntryRect.center = ((WIN_WIDTH // 2), 10 * WIN_HEIGHT // 19)
 
     s = pygame.Surface((140, 32))  # the size of rect
     s.set_alpha(128)                # alpha level
@@ -501,8 +497,6 @@ def exitGameMenu():
 
         # draw name input box
         if not accepted and game_started:
-#            pygame.draw.rect(screen, color, input_box, 0)
-#            screen.blit(nameEntry, nameEntryRect)
             txt_surface = font.render(text, True, BLACK)
             screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
             s.fill(color)
