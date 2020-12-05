@@ -2,7 +2,7 @@
 
 ![](images/image7.png "short line")
 
-Letter Rain              An Interactive Letter Game
+# Letter Rain - An Interactive Letter Game
 
 ![](images/image7.png "short line")
 
@@ -12,12 +12,15 @@ you to form words from the falling letters before they sink into the
 water below. Speed and accuracy are key factors to excel in this game,
 apart from of course, the slice of luck.
 
-Tools Used
+## Usage
+```python3 game.py```
+
+## Tools Used
 
 -   Python3
 -   Pygame
 
-Gameplay
+## Gameplay
 
 The gameplay is very simple and intuitive. There will be letters falling
 from the sky into the river below. The objective of the game is to form
@@ -32,7 +35,7 @@ progress to the next level. Each level is of the same  fixed duration
 must achieve a minimum of the target score to progress. Failing to score
 the minimum level target score will lead to  “Game Over”.
 
-Features
+## Features
 
 -   Pause - The player can decide to pause the game at any point in
     between the level. A pause screen with three options - continue,
@@ -61,7 +64,7 @@ Features
     it among the leaders.
 -   Display of Words Formed
 
-Levels
+## Levels
 
 At the moment there are 10 leves with the target scores of 10, 20, 30,
 40, 50, 60, 65, 70, 75 and 80 respectively. Each level is of a fixed
@@ -81,7 +84,7 @@ the word being formed in the top center of the screen.
 The level window also has buttons to mute/unmute the background music
 and also pause the game.
 
-Letter Generation
+## Letter Generation
 
 The letters are generated from a distribution that ensures a high
 probability of being able to form a meaningful word.
@@ -103,7 +106,7 @@ being possibly formed.
 The algorithm to generate this can possibly be improved in the future,
 but this is what it is for now.
 
-Scores & Rating
+## Scores & Rating
 
 The scoring for this game is similar to the one used in scrabble. Each
 letter has  a score associated with it. The score for each letter is
@@ -111,7 +114,7 @@ also taken from Scrabble. If the player forms a meaningful word (that is
 present in our dictionary), we compute the sum of the scores of the
 individual letter in the word and update the score.
 
-Rating
+## Rating
 
 The player gets the rating only if they pass the level by scoring the
 minimum target score. The rating is done in a simple manner as follows:
@@ -125,25 +128,25 @@ minimum target score. The rating is done in a simple manner as follows:
 
 Look into the Game
 
-Start Screen
+## Start Screen
 
 ![](images/image3.png)
 
-Level Screen
+### Level Screen
 
 ![](images/image6.png)
 
-Level Screen - Word Formed
+### Level Screen - Word Formed
 
 ![](images/image9.png)
 
-Pause Screen
+### Pause Screen
 
 ![](images/image1.png)
 
 Score Screen![](images/image4.png)
 
-Game Over Screen
+### Game Over Screen
 
 ![](images/image5.png)
 
