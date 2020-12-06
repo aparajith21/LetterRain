@@ -144,13 +144,15 @@ Look into the Game
 
 ![](images/image1.png)
 
-Score Screen![](images/image4.png)
+### Score Screen
+![](images/image4.png)
 
 ### Game Over Screen
 
 ![](images/image5.png)
 
-Leaderboard![](images/image8.png)
+### Leaderboard
+![](images/image8.png)
 
 ![](images/image10.png "short dash")
 
